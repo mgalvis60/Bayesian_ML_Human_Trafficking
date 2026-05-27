@@ -43,6 +43,31 @@ The pie chart shows that 72.8% of human traffic is female. Taking a closer look,
 ## Methodology
 
 ### Model 1: Bayesian State Space Decomposition
+The idea behind developing this type of model was to identify how potential situations of human trafficking are evolving over time and whether public policy decisions are improving the identified cases. Therefore, the FOSTA policy intervention of 2018 was taken as a reference.
+
+The Bayesian structural time series implemented was using PyMC:
+   1.	Separating trend + policy effect + noise
+   2.	Estimating everything probabilistically with MCMC (NUTS)
+   3.	Extracting a "cleaned" residual signal after removing the structure
+      
+$$y_t = \text{trend}_t + \text{policy effect}_t + \text{noise}_t$$
+* $$\text{trend}_t =$$ slowly evolving hidden baseline
+* $$\text{policy effect}_t =$$ step change starting in 2018
+* $$\text{noise}_t =$$ observation randomness
+
+**Results:**
+
+![image](figures/posterior_distribution.png)<br>
+Posterior Distribution: The model estimates that FOSTA increased situations identified by 0.34, but the HDI is between -1.58 and +2.20, which crosses zero, leading to uncertainty about the impact of the policy.<br>
+
+![image](figures/trace_plot.png)<br>
+Trace plot: All the chains agree on the same shape, indicating strong convergence, but like the previous graph, it suggests the model leans toward a positive policy effect, but the zero value appears in the interval, the variance is too wide to be conclusive. 
+
+![image](figures/obs_vs_pred.png)<br>
+The observation vs. prediction time series shows great performance, the model was able to learn the trend, the level, handle the policy effect, and control the noise in the data.
+
+This type of model can help decompose and evaluate how decisions and resources related to human trafficking assistance impact victims.
+
 
 ### Model 2: Hierarchical Beta Binomial
 
