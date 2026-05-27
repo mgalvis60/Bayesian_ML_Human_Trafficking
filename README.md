@@ -129,25 +129,7 @@ The Bayesian resource optimizer was structured as:
 3. Apply an asymmetric LINEX loss function that penalizes unmet demand more heavily than unused capacity
 4. Use SLSQP to find the lowest-loss allocation under a fixed budget constraint
 
-For each service category $c$, the loss function is:
-
-$$
-L(S_{c}, y_{c}^{\star}) =
-b_{c} \left[
-\exp(a_{c}(y_{c}^{\star} - S_{c})) - a_{c}(y_{c}^{\star} - S_{c}) - 1
-\right]
-$$
-
-where $S_{c}$ is allocated capacity, $y_{c}^{\star}$ is simulated future demand, $a_{c}$ controls the under-provisioning penalty, and $b_{c}$ scales category-specific loss. The optimizer then solves:
-
-$$
-\min_{\mathbf{S}}
-\sum_{c} \mathbb{E}_{y_{c}^{\star}}[L(S_{c}, y_{c}^{\star})]
-\quad
-\text{subject to}
-\quad
-\sum_{c} cost_{c} S_{c} \leq B
-$$
+The loss function compares allocated capacity with simulated future demand for each service category. When demand is higher than capacity, the penalty rises sharply; when capacity is higher than demand, the penalty grows more slowly. The final allocation is chosen by minimizing expected LINEX loss while keeping total cost within the available budget.
 
 This allows the model to redistribute limited service capacity toward categories where unmet demand is expected to be most costly.
 
