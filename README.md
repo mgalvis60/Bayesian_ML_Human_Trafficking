@@ -132,17 +132,17 @@ The Bayesian resource optimizer was structured as:
 For each service category $c$, the loss function is:
 
 $$
-L(S_{c}, y_{c}^{*}) =
+L(S_{c}, y_{c}^{\star}) =
 b_{c} \left[
-\exp(a_{c}(y_{c}^{*} - S_{c})) - a_{c}(y_{c}^{*} - S_{c}) - 1
+\exp(a_{c}(y_{c}^{\star} - S_{c})) - a_{c}(y_{c}^{\star} - S_{c}) - 1
 \right]
 $$
 
-where $S_{c}$ is allocated capacity, $y_{c}^{*}$ is simulated future demand, $a_{c}$ controls the under-provisioning penalty, and $b_{c}$ scales category-specific loss. The optimizer then solves:
+where $S_{c}$ is allocated capacity, $y_{c}^{\star}$ is simulated future demand, $a_{c}$ controls the under-provisioning penalty, and $b_{c}$ scales category-specific loss. The optimizer then solves:
 
 $$
 \min_{\mathbf{S}}
-\sum_{c} \mathbb{E}_{y_{c}^{*}}[L(S_{c}, y_{c}^{*})]
+\sum_{c} \mathbb{E}_{y_{c}^{\star}}[L(S_{c}, y_{c}^{\star})]
 \quad
 \text{subject to}
 \quad
