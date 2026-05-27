@@ -58,18 +58,64 @@ $$y_t = \text{trend}_t + \text{policy effect}_t + \text{noise}_t$$
 **Results:**
 
 ![image](figures/posterior_distribution.png)<br>
-Posterior Distribution: The model estimates that FOSTA increased situations identified by 0.34, but the HDI is between -1.58 and +2.20, which crosses zero, leading to uncertainty about the impact of the policy.<br>
+Posterior Distribution: The model estimates that FOSTA increased the number of situations identified by 0.34, but the HDI is between -1.58 and +2.20, which crosses zero, leading to uncertainty about the policy's impact.<br>
 
 ![image](figures/trace_plot.png)<br>
-Trace plot: All the chains agree on the same shape, indicating strong convergence, but like the previous graph, it suggests the model leans toward a positive policy effect, but the zero value appears in the interval, the variance is too wide to be conclusive. 
+Trace plot: All the chains agree on the same shape, indicating strong convergence. As in the previous graph, the model suggests a positive policy effect, but the zero value appears within the interval; the variance is too wide to be conclusive. 
 
 ![image](figures/obs_vs_pred.png)<br>
-The observation vs. prediction time series shows great performance, the model was able to learn the trend, the level, handle the policy effect, and control the noise in the data.
+The observation vs. prediction time series shows strong performance; the model was able to learn the trend and level, handle the policy effect, and control the noise in the data.
 
-This type of model can help decompose and evaluate how decisions and resources related to human trafficking assistance impact victims.
+This type of model can help decompose and evaluate how decisions and resource allocation related to human trafficking assistance affect victims.
 
 
 ### Model 2: Hierarchical Beta Binomial
+
+The idea behind this model is to estimate the prevalence of each means_of_control while pooling information within each exploitation_type (for example, forced labor and sex trafficking). This helps stabilize estimates when some categories have low sample sizes.
+
+The Bayesian hierarchical Beta-Binomial model implemented in PyMC was structured as:
+
+1. Defining group-level priors for each exploitation type (mu, kappa)
+2. Mapping each row to group-specific Beta parameters (alpha, beta)
+3. Estimating row-level latent prevalence (theta) with partial pooling
+4. Linking observed counts through a Binomial likelihood
+
+
+For each row $i$ in group $g(i)$:
+
+$$
+\begin{aligned}
+\mu_g &\sim \mathrm{Beta}(1,1) \\
+\kappa_g &\sim \mathrm{Pareto}(1,1.5) \\
+\theta_i &\sim \mathrm{Beta}(\mu_{g(i)}\kappa_{g(i)}, (1-\mu_{g(i)})\kappa_{g(i)}) \\
+y_i &\sim \mathrm{Binomial}(n_i, \theta_i)
+\end{aligned}
+$$
+
+Where $y_i$ is the observed positive count, $n_i$ is the observed total count, and $\theta_i$ is the pooled prevalence estimate.
+
+**Model 2 visual outputs:**
+
+![image](figures/model2_empirical_vs_pooled.png)<br>
+Empirical vs pooled prevalence: high-count categories stay close to the diagonal, while sparse categories are regularized toward group-level means.
+
+![image](figures/model2_observed_vs_predicted_benchmark.png)<br>
+Observed vs predicted benchmark: posterior predictive means align closely with observed rates across categories.
+
+![image](figures/model2_posterior_intervals.png)<br>
+Posterior interval plot: intervals summarize uncertainty by category and help identify where additional data collection is most valuable.
+
+![image](figures/model2_trace_mu_kappa.png)<br>
+Trace diagnostics for `mu` and `kappa`: chains mix well in this run and support stable posterior summaries.
+
+**Benchmark metrics (posterior predictive):**
+- MAE (count): 0.4106
+- RMSE (count): 0.4627
+- MAE (rate): 0.0012
+- RMSE (rate): 0.0029
+
+These results indicate strong in-sample calibration for category-level prevalence, while preserving uncertainty quantification for sparse groups.
+
 
 ### Model 3: Bayesian Resource Optimizer
 
