@@ -96,16 +96,16 @@ Where $y_i$ is the observed positive count, $n_i$ is the observed total count, a
 
 **Model 2 figures**
 
-![Model 2 empirical vs pooled prevalence](figures/model2_empirical_vs_pooled.png)<br>
+![Model 2 empirical vs pooled prevalence](Noah/model2_empirical_vs_pooled.png)<br>
 **Figure 1. Empirical vs pooled prevalence.** Points close to the diagonal indicate categories with enough data to stand largely on their own. Off-diagonal adjustments show where hierarchical pooling regularizes sparse categories toward more plausible group-level values.
 
-![Model 2 observed vs predicted benchmark](figures/model2_observed_vs_predicted_benchmark.png)<br>
+![Model 2 observed vs predicted benchmark](Noah/model2_observed_vs_predicted_benchmark.png)<br>
 **Figure 2. Observed vs predicted benchmark.** Posterior predictive means closely track observed category-level rates, indicating that the model reproduces the overall prevalence structure well.
 
-![Model 2 posterior intervals](figures/model2_posterior_intervals.png)<br>
+![Model 2 posterior intervals](Noah/model2_posterior_intervals.png)<br>
 **Figure 3. Posterior intervals by category.** The interval widths show uncertainty around each prevalence estimate and highlight where additional data collection would be most valuable.
 
-![Model 2 trace diagnostics](figures/model2_trace_mu_kappa.png)<br>
+![Model 2 trace diagnostics](Noah/model2_trace_mu_kappa.png)<br>
 **Figure 4. Trace diagnostics for `mu` and `kappa`.** The chains mix cleanly in this run, supporting stable posterior summaries for the group-level parameters.
 
 
