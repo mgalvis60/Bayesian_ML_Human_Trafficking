@@ -155,14 +155,22 @@ $$
 
 This allows the model to redistribute limited service capacity toward categories where unmet demand is expected to be most costly.
 
-**Model 3 outputs**
+**Model 3 figures**
 
-The notebook reports:
+![Model 3 demand scenarios](Sieon/model3_demand_scenarios.png)<br>
+**Figure 1. Posterior predictive demand scenarios.** The distributions compare projected annual service demand with current FY2024 service delivery across the five OVC service categories.
 
-- Posterior predictive demand scenarios compared with current FY2024 service delivery
-- Current versus optimized service allocation
-- Expected LINEX loss before and after optimization
-- Sensitivity analysis over the asymmetry parameter and budget level
+![Model 3 LINEX loss](Sieon/model3_linex_loss.png)<br>
+**Figure 2. LINEX loss function.** Under-provisioning produces a much steeper penalty than over-provisioning, reflecting the higher policy cost of unmet victim-service demand.
+
+![Model 3 optimized allocation](Sieon/model3_optimized_allocation.png)<br>
+**Figure 3. Current vs optimized allocation.** The SLSQP optimizer reallocates cost-weighted capacity across service categories to reduce expected LINEX loss under the same budget constraint.
+
+![Model 3 asymmetry sensitivity](Sieon/model3_asymmetry_sensitivity.png)<br>
+**Figure 4. Asymmetry sensitivity analysis.** Varying the LINEX asymmetry parameter shows how stronger penalties for under-provisioning shift the optimal allocation.
+
+![Model 3 budget sensitivity](Sieon/model3_budget_sensitivity.png)<br>
+**Figure 5. Budget sensitivity analysis.** The expected loss curve shows how policy loss changes as the available budget increases or decreases relative to the current service level.
 
 These results provide a decision-theoretic bridge between Bayesian inference and policy implementation. Rather than only estimating demand, Model 3 recommends how limited service resources should be allocated under uncertainty.
 
