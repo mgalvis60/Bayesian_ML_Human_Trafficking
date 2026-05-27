@@ -5,7 +5,7 @@
 **Group members:** Bhavya Sharma, Jiwon Choi, Noah Fisher, Sieon Lee, and Mateo Galvis
 
 ## Agenda
-1. [Problematic](#problematic)
+1. [Problem Statement](#problem-statement)
 2. [Datasets](#datasets)
 3. [EDA](#eda) 
 4. [Methodology](#methodology)
@@ -14,14 +14,34 @@
     * [Model 3: Bayesian Resource Optimizer](#model-3-bayesian-resource-optimizer)
 5. [Conclusions and next steps](#conclusions-and-next-steps)
 
-## Problematic
+## Problem Statement
 Human trafficking is a silent pandemic that our world is facing with 49.6 M victims in modern
 slavery globally. Almost 80% of victims globally face a gap in access to reintegration services
 after rehabilitation. Fragmented case management data across agencies exist in silos and there is
 no comprehensive solution to this problem. We look at the data on victim services in the United
 States to understand the trends in this sector.
 
+Three structural challenges make conventional statistical approaches inadequate:
+
+**(1) The Dark Figure Problem:** The vast majority of trafficking victims are never identified by any reporting system. Hotline calls, grantee caseloads, and law enforcement records each capture a different, incomplete slice of the same hidden population. No single source reflects true prevalence, and the gap between reporting volume and actual incidence is unknown by definition.
+
+**(2) Data Sparsity and Inconsistency:** Victim characteristics, means of control, and exploitation types are inconsistently recorded across data sources, time periods, and geographies. Missing values are not random — they cluster in early years, low-capacity regions, and high-sensitivity cases, making naive imputation strategies unreliable.
+
+**(3) The Cost of Being Wrong is Asymmetric:** In shelter resource planning, a false positive (an empty bed) wastes money. A false negative (a victim turned away) is a humanitarian catastrophe. Standard point-estimate models that optimize for accuracy treat these two errors as equivalent which is a deeply inappropriate assumption in this domain.
+
+This project directly addresses all three challenges through a pipeline of Bayesian probabilistic models. Rather than producing a single deterministic forecast, our framework propagates uncertainty at every stage (from victim prevalence estimation to demographic profiling to resource allocation) and deliberately builds in a safety margin that reflects the true asymmetry of cost in anti-trafficking work.
+
+
 ## Datasets
+
+| Dataset | Structure | Role | Strength | Source | Limitation |
+|---------|-----------|------|----------|--------|------------|
+| Polaris U.S. Hotline FY13–FY24 | 12 rows × 5 cols | Detection / awareness proxy | Long, consistent | [Polaris Project](https://polarisproject.org/resources/us-national-human-trafficking-hotline-statistics/) | Selection bias; methodology shifts |
+| OVC PMT Grantee Data (FY23–FY24) | 8 rows × 8 cols | Service capacity proxy | Federally audited | [OVC / OJP](https://ovc.ojp.gov/funding/performance-measures/human-trafficking) | Capacity-constrained, not prevalence |
+| CTDC Global Dataset (2002–2019) | 48K rows × 63 cols | Victim characteristics | Rich covariates | [CTDC](https://www.ctdatacollaborative.org/global-dataset) | Identification, not population, sample |
+| ILO Global Estimates of Modern Slavery | 12 published summary tables segmented by region, sex, age, and exploitation typology | External anchor / prior | Cross-national | [CTDC / ILO](https://www.ctdatacollaborative.org/page/global-estimates-modern-slavery-forced-labour-and-forced-marriage-2022) | Estimation methodology contested |
+| TIP Report (State Dept.) | 30 rows × 6 cols | Country-tier covariates | Annual, comprehensive | [State Dept.](https://www.state.gov/trafficking-in-persons-report) | Diplomatic/political weighting |
+| BJS NCVS supplements & FBI NIBRS | ~240,000 impacted persons records per year across six linked segment files at the agency-incident level | U.S. crime baseline | Probability sample | [BJS / OJP](https://bjs.ojp.gov/data-collection/ncvs) | Trafficking severely underreported |
 
 ## EDA
 
