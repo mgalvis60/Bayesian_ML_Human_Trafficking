@@ -94,19 +94,20 @@ $$
 
 Where $y_i$ is the observed positive count, $n_i$ is the observed total count, and $\theta_i$ is the pooled prevalence estimate.
 
-**Model 2 visual outputs:**
+**Model 2 figures**
 
-![image](figures/model2_empirical_vs_pooled.png)<br>
-Empirical vs pooled prevalence: high-count categories stay close to the diagonal, while sparse categories are regularized toward group-level means.
+![Model 2 empirical vs pooled prevalence](figures/model2_empirical_vs_pooled.png)<br>
+**Figure 1. Empirical vs pooled prevalence.** Points close to the diagonal indicate categories with enough data to stand largely on their own. Off-diagonal adjustments show where hierarchical pooling regularizes sparse categories toward more plausible group-level values.
 
-![image](figures/model2_observed_vs_predicted_benchmark.png)<br>
-Observed vs predicted benchmark: posterior predictive means align closely with observed rates across categories.
+![Model 2 observed vs predicted benchmark](figures/model2_observed_vs_predicted_benchmark.png)<br>
+**Figure 2. Observed vs predicted benchmark.** Posterior predictive means closely track observed category-level rates, indicating that the model reproduces the overall prevalence structure well.
 
-![image](figures/model2_posterior_intervals.png)<br>
-Posterior interval plot: intervals summarize uncertainty by category and help identify where additional data collection is most valuable.
+![Model 2 posterior intervals](figures/model2_posterior_intervals.png)<br>
+**Figure 3. Posterior intervals by category.** The interval widths show uncertainty around each prevalence estimate and highlight where additional data collection would be most valuable.
 
-![image](figures/model2_trace_mu_kappa.png)<br>
-Trace diagnostics for `mu` and `kappa`: chains mix well in this run and support stable posterior summaries.
+![Model 2 trace diagnostics](figures/model2_trace_mu_kappa.png)<br>
+**Figure 4. Trace diagnostics for `mu` and `kappa`.** The chains mix cleanly in this run, supporting stable posterior summaries for the group-level parameters.
+
 
 **Benchmark metrics (posterior predictive):**
 - MAE (count): 0.4106
