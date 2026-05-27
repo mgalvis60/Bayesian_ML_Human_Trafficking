@@ -120,37 +120,33 @@ These results indicate strong in-sample calibration for category-level prevalenc
 
 ### Model 3: Bayesian Resource Optimizer
 
-The idea behind this model is to convert uncertain victim-service demand into an optimized resource allocation plan. Instead of allocating capacity based only on observed service totals, the model uses posterior predictive demand scenarios and penalizes under-provisioning more heavily than over-provisioning.
+The idea behind this model is to turn uncertain victim-service demand into a practical resource allocation plan. Instead of using only observed service totals, the model simulates future demand and chooses the allocation that minimizes expected policy loss.
 
 The Bayesian resource optimizer implemented in [Sieon's Model 3 notebook](Sieon/model3_dlm_latent_demand.ipynb) was structured as:
 
-1. Estimating future annual demand scenarios from FY2023-FY2024 OVC quarterly service data
-2. Connecting demand scenarios to the DLM residual signal from Model 1
-3. Calibrating service-category risk weights using the Beta-Binomial coercion footprint from Model 2
-4. Defining an asymmetric LINEX loss function for unmet service demand
-5. Solving a budget-constrained optimization problem with SLSQP
-6. Running sensitivity analysis across budget levels and under-provisioning penalties
+1. Generate posterior predictive demand scenarios from FY2023-FY2024 OVC quarterly service data
+2. Adjust demand using the residual signal from Model 1 and service-risk weights from Model 2
+3. Apply an asymmetric LINEX loss function that penalizes unmet demand more heavily than unused capacity
+4. Use SLSQP to find the lowest-loss allocation under a fixed budget constraint
 
-For each service category $c$:
+For each service category $c$, the loss function is:
 
 $$
-L(S_c, y_c^*) =
-b_c \left[
-\exp(a_c(y_c^* - S_c)) - a_c(y_c^* - S_c) - 1
+L(S_{c}, y_{c}^{*}) =
+b_{c} \left[
+\exp(a_{c}(y_{c}^{*} - S_{c})) - a_{c}(y_{c}^{*} - S_{c}) - 1
 \right]
 $$
 
-Where $S_c$ is the allocated service capacity, $y_c^*$ is posterior predictive demand, $a_c$ controls the penalty for under-provisioning, and $b_c$ scales the category-specific loss.
-
-The optimizer solves:
+where $S_{c}$ is allocated capacity, $y_{c}^{*}$ is simulated future demand, $a_{c}$ controls the under-provisioning penalty, and $b_{c}$ scales category-specific loss. The optimizer then solves:
 
 $$
 \min_{\mathbf{S}}
-\sum_c \mathbb{E}_{y_c^*}[L(S_c, y_c^*)]
+\sum_{c} \mathbb{E}_{y_{c}^{*}}[L(S_{c}, y_{c}^{*})]
 \quad
 \text{subject to}
 \quad
-\sum_c cost_c S_c \leq B
+\sum_{c} cost_{c} S_{c} \leq B
 $$
 
 This allows the model to redistribute limited service capacity toward categories where unmet demand is expected to be most costly.
