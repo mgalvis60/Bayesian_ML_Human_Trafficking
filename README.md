@@ -33,7 +33,7 @@ The proportion of signals reported by potential victims has constantly decreased
 
 
 ![image](figures/ovc_trafficking_chart.png)<br>
-The OVC displays that in recent years, the most common cause is sex trafficking, with an increase of 15K victims in 2024 compared with 2023, reaching 90K annually, followed by labor trafficking, with 2403 in 2024, in contrast with 2056 in 2023. It is essential that governance start tracking these metrics to develop more efficient public policies that reduce the number of victims.
+The OVC displays that in recent years, the most common cause is sex trafficking, increasing from 7,686 victims served in 2023 to 9,066 in 2024, followed by labor trafficking, with 2,403 in 2024, in contrast with 2,056 in 2023. It is essential that governance start tracking these metrics to develop more efficient public policies that reduce the number of victims.
 
 
 ![image](figures/gender_distribution_age.png)<br>
@@ -120,5 +120,50 @@ These results indicate strong in-sample calibration for category-level prevalenc
 
 ### Model 3: Bayesian Resource Optimizer
 
-## Conclusions and next steps
+The idea behind this model is to convert uncertain victim-service demand into an optimized resource allocation plan. Instead of allocating capacity based only on observed service totals, the model uses posterior predictive demand scenarios and penalizes under-provisioning more heavily than over-provisioning.
 
+The Bayesian resource optimizer implemented in [Sieon's Model 3 notebook](Sieon/model3_dlm_latent_demand.ipynb) was structured as:
+
+1. Estimating future annual demand scenarios from FY2023-FY2024 OVC quarterly service data
+2. Connecting demand scenarios to the DLM residual signal from Model 1
+3. Calibrating service-category risk weights using the Beta-Binomial coercion footprint from Model 2
+4. Defining an asymmetric LINEX loss function for unmet service demand
+5. Solving a budget-constrained optimization problem with SLSQP
+6. Running sensitivity analysis across budget levels and under-provisioning penalties
+
+For each service category $c$:
+
+$$
+L(S_c, y_c^*) =
+b_c \left[
+\exp(a_c(y_c^* - S_c)) - a_c(y_c^* - S_c) - 1
+\right]
+$$
+
+Where $S_c$ is the allocated service capacity, $y_c^*$ is posterior predictive demand, $a_c$ controls the penalty for under-provisioning, and $b_c$ scales the category-specific loss.
+
+The optimizer solves:
+
+$$
+\min_{\mathbf{S}}
+\sum_c \mathbb{E}_{y_c^*}[L(S_c, y_c^*)]
+\quad
+\text{subject to}
+\quad
+\sum_c cost_c S_c \leq B
+$$
+
+This allows the model to redistribute limited service capacity toward categories where unmet demand is expected to be most costly.
+
+**Model 3 outputs**
+
+The notebook reports:
+
+- Posterior predictive demand scenarios compared with current FY2024 service delivery
+- Current versus optimized service allocation
+- Expected LINEX loss before and after optimization
+- Sensitivity analysis over the asymmetry parameter and budget level
+
+These results provide a decision-theoretic bridge between Bayesian inference and policy implementation. Rather than only estimating demand, Model 3 recommends how limited service resources should be allocated under uncertainty.
+
+## Conclusions and next steps
