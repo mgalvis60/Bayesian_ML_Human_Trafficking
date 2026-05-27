@@ -122,7 +122,7 @@ These results indicate strong in-sample calibration for category-level prevalenc
 
 The idea behind this model is to turn uncertain victim-service demand into a practical resource allocation plan. Instead of using only observed service totals, the model simulates future demand and chooses the allocation that minimizes expected policy loss.
 
-The Bayesian resource optimizer implemented in [Sieon's Model 3 notebook](Sieon/model3_dlm_latent_demand.ipynb) was structured as:
+The Bayesian resource optimizer was structured as:
 
 1. Generate posterior predictive demand scenarios from FY2023-FY2024 OVC quarterly service data
 2. Adjust demand using the residual signal from Model 1 and service-risk weights from Model 2
